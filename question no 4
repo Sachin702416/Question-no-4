@@ -1,0 +1,39 @@
+#include <stack>
+#include <string>
+using namespace std;
+string minimizeTicketPrice(const string& price, int k) {
+    stack<char> st;
+    for (char digit : price) {
+        while (!st.empty() && k > 0 && st.top() > digit) {
+            st.pop();
+            k--;
+        }
+        st.push(digit);
+    }
+    while (k > 0 && !st.empty()) {
+        st.pop();
+        k--;
+    }
+    string result;
+    while (!st.empty()) {
+        result = st.top() + result;  
+        st.pop();
+    }
+    size_t nonZeroIndex = result.find_first_not_of('0');
+    if (nonZeroIndex == string::npos) {
+        return "0";
+    }
+    result = result.substr(nonZeroIndex);
+    return result;
+}
+int main() {
+    string price;
+    int k;
+    cout << "Enter the price of the ticket: ";
+    cin >> price;
+    cout << "Enter the number of removals allowed: ";
+    cin >> k;
+    string minimizedPrice = minimizeTicketPrice(price, k);
+    cout << "The minimized price after removing " << k << " digits is: " << minimizedPrice << endl;
+    return 0;
+}
